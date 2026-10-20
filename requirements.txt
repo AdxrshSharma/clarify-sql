@@ -1,0 +1,36 @@
+# Data + evaluation + safety use only the Python standard library.
+# Training / local inference (GPU, e.g. free Colab T4):
+torch
+transformers>=4.46
+datasets
+accelerate
+peft
+trl>=0.20
+bitsandbytes
+# Serving
+fastapi
+uvicorn
+# Prompted-API baseline (optional)
+anthropic
+# Tests (optional)
+pytest
+
+#Torch : The deep learning engine. It holds the model’s tensors and runs the math on the GPU. Everything else here builds on it... finetune.py backends.py
+
+#transformers : Loads the Qwen model and tokenizer from Hugging Face and generates text...finetune.py, backends.py
+
+#datasets : Loads train.jsonl and val.jsonl and reshapes them into prompt/completion pairs for training...finetune.py
+
+#accelerate	: Handles device placement and mixed precision (fp16) for the Hugging Face Trainer... transformers/trl
+
+#peft :	Provides LoRA: a small set of trainable adapter weights is attached to a frozen model, so you train a tiny fraction of the parameters...	finetune.py, backends.py
+
+#trl : Provides SFTTrainer, the supervised fine-tuning loop. It runs the training steps and masks the loss to the answer only...	finetune.py
+
+#bitsandbytes :Loads the model in 4-bit, which cuts memory roughly 4x so a 1.5B model fits on a free T4. This is the “Q” in QLoRA... finetune.py, backends.py
+
+#fastapi + uvicorn : Serves the model as a web API (/ask). FastAPI defines the endpoint, and uvicorn is the server that runs it... serve.py
+
+#anthropic : Optional. Calls a prompted API model as a baseline to compare against...	backends.py
+
+#pytest : Optional. Runs the unit tests...	tests/
